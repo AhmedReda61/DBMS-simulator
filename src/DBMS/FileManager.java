@@ -13,16 +13,18 @@ public class FileManager
 {
 	
 	static String path = FileManager.class.getResource("FileManager.class").toString();
-    static File directory = new File(path.substring(6,path.length()-17) + File.separator 
+    static File directory = new File(path.substring(6,path.length()-17) + File.separator
     		+ "Tables" + File.separator);
+//	static File directory = new File( "Tables" + File.separator);
 	
     public static boolean storeTable(String tableName, Table t)
 	{
-		try {
-			TimeUnit.MILLISECONDS.sleep(1);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-		}
+//		try {
+//			TimeUnit.MILLISECONDS.sleep(1);
+//		} catch (InterruptedException e1) {
+//			// TODO Auto-generated catch block
+////			e1.printStackTrace();
+//		}
 		File tableDirectory = new File(directory, tableName);
 		tableDirectory.mkdirs();
 	    File fl = new File(tableDirectory, tableName+".db");
@@ -37,6 +39,7 @@ public class FileManager
 		} 
 		catch (Exception e)
 		{
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -44,11 +47,12 @@ public class FileManager
     
     public static Table loadTable(String tableName)
 	{
-		try {
-			TimeUnit.MILLISECONDS.sleep(1);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
+//		try {
+//			TimeUnit.MILLISECONDS.sleep(1);
+//		} catch (InterruptedException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 		File tableDirectory = new File(directory, tableName);
 	    File fl = new File(tableDirectory, tableName+".db");
 	    
@@ -62,18 +66,20 @@ public class FileManager
 		} 
 		catch (Exception e)
 		{
-			
+			// TODO Auto-generated catch block
+//			e.printStackTrace();
 		}
 	    return res;
 	}
     
 	public static boolean storeTablePage(String tableName, int pageNumber, Page p)
 	{
-		try {
-			TimeUnit.MILLISECONDS.sleep(1);
-		} catch (InterruptedException e1) {
-
-		}
+//		try {
+//			TimeUnit.MILLISECONDS.sleep(1);
+//		} catch (InterruptedException e1) {
+//			// TODO Auto-generated catch block
+////			e1.printStackTrace();
+//		}
 		File tableDirectory = new File(directory, tableName);
 		tableDirectory.mkdir();
 	    File fl = new File(tableDirectory, ""+pageNumber+".db");
@@ -88,6 +94,7 @@ public class FileManager
 		} 
 		catch (Exception e)
 		{
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -95,11 +102,12 @@ public class FileManager
 	
 	public static Page loadTablePage(String tableName, int pageNumber)
 	{
-		try {
-			TimeUnit.MILLISECONDS.sleep(1);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
+//		try {
+//			TimeUnit.MILLISECONDS.sleep(1);
+//		} catch (InterruptedException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 		File tableDirectory = new File(directory, tableName);
 	    File fl = new File(tableDirectory, ""+pageNumber+".db");
 	    
@@ -113,9 +121,116 @@ public class FileManager
 		} 
 		catch (Exception e)
 		{
-			
+			// TODO Auto-generated catch block
+//			e.printStackTrace();
 		}
 	    return res;
+	}
+	
+	public static boolean storeTableIndex(String tableName, String columnName, BitmapIndex b)
+	{
+//		try {
+//			TimeUnit.MILLISECONDS.sleep(1);
+//		} catch (InterruptedException e1) {
+//			// TODO Auto-generated catch block
+////			e1.printStackTrace();
+//		}
+		File tableDirectory = new File(directory, tableName);
+		tableDirectory.mkdir();
+	    File fl = new File(tableDirectory, ""+columnName+".db");
+	    
+		try 
+		{
+			FileOutputStream fout = new FileOutputStream(fl);
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			oos.writeObject(b);
+			oos.close();
+			return true;
+		} 
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public static BitmapIndex loadTableIndex(String tableName, String columnName)
+	{
+//		try {
+//			TimeUnit.MILLISECONDS.sleep(1);
+//		} catch (InterruptedException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		File tableDirectory = new File(directory, tableName);
+	    File fl = new File(tableDirectory, ""+columnName+".db");
+	    
+	    BitmapIndex res = null;
+	    try 
+		{
+			FileInputStream fin = new FileInputStream(fl);
+			ObjectInputStream ois = new ObjectInputStream(fin);
+			res = (BitmapIndex)ois.readObject();
+			ois.close();
+		} 
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+//			e.printStackTrace();
+		}
+	    return res;
+	}
+
+	public static boolean storeIndexBlock(String tableName, String colName, int blockNumber, DenseIndexBlock block)
+	{
+		try {
+			TimeUnit.MILLISECONDS.sleep(1);
+		} catch (InterruptedException e1) {
+//			e1.printStackTrace();
+		}
+		File tableDirectory = new File(directory, tableName);
+		tableDirectory.mkdir();
+		File fl = new File(tableDirectory, colName+"_"+blockNumber+".db");
+
+		try
+		{
+			FileOutputStream fout = new FileOutputStream(fl);
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			oos.writeObject(block);
+			oos.close();
+			return true;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public static DenseIndexBlock loadIndexBlock(String tableName, String colName, int blockNumber)
+	{
+		try {
+			TimeUnit.MILLISECONDS.sleep(1);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		File tableDirectory = new File(directory, tableName);
+		File fl = new File(tableDirectory, colName+"_"+blockNumber+".db");
+
+		DenseIndexBlock res = null;
+		try
+		{
+			FileInputStream fin = new FileInputStream(fl);
+			ObjectInputStream ois = new ObjectInputStream(fin);
+			res = (DenseIndexBlock)ois.readObject();
+			ois.close();
+		}
+		catch (Exception e)
+		{
+//			e.printStackTrace();
+		}
+		return res;
 	}
 	
 	private static void deleteDir(File file) 

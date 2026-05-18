@@ -176,76 +176,42 @@ public class DBApp
 		return t.getOps().getLast();
 	}
 
+	// -----------------MS2-------------------
+
+	public static ArrayList<String []> validateRecords(String tableName){
+		return null;
+	}
+
+	public static void recoverRecords(String tableName, ArrayList<String[]> missing){
+
+	}
+
+	public static void createBitMapIndex(String tableName, String colName){
+
+	}
+
+	public static String getValueBits(String tableName, String colName, String value){
+		return null;
+	}
+
+	public static ArrayList<String []> selectIndex(String tableName, String[] cols, String[] vals){
+		return null;
+	}
+
+	// -----------------MS3-------------------
+
+	public static void creatDenseIndex(String tableName, String colName){
+
+	}
+
+	public static String getIndexRepresentation(String tableName, String colName){
+		return null;
+	}
+
 
 	public static void main(String []args) throws IOException
 	{
 
-//		String[] cols = {"id","name","major","semester","gpa"};
-//		createTable("student", cols);
-//		String[] r1 = {"1", "stud1", "CS", "5", "0.9"};
-//		insert("student", r1);
-//		String[] r2 = {"2", "stud2", "BI", "7", "1.2"};
-//		insert("student", r2);
-//		String[] r3 = {"3", "stud3", "CS", "2", "2.4"};
-//		insert("student", r3);
-//		String[] r4 = {"4", "stud4", "DMET", "9", "1.2"};
-//		insert("student", r4);
-//		String[] r5 = {"5", "stud5", "BI", "4", "3.5"};
-//		insert("student", r5);
-//
-//		System.out.println("Output of selecting the whole table content:");
-//		ArrayList<String[]> result1 = select("student");
-//		for (String[] array : result1) {
-//			for (String str : array) {
-//				System.out.print(str + " ");
-//			}
-//			System.out.println();
-//		}
-//		System.out.println("----------------------------------------");
-//
-//		System.out.println("Output of selecting the output by position:");
-//		ArrayList<String[]> result2 = select("student", 1, 1);
-//		for (String[] array : result2) {
-//			for (String str : array) {
-//				System.out.print(str + " ");
-//			}
-//			System.out.println();
-//		}
-//		System.out.println("----------------------------------------");
-//
-//		System.out.println("Output of selecting the output by column condition:");
-//		ArrayList<String[]> result3 = select("student", new String[]{"gpa"}, new String[]{"1.2"});
-//		for (String[] array : result3) {
-//			for (String str : array) {
-//				System.out.print(str + " ");
-//			}
-//			System.out.println();
-//		}
-//		System.out.println("----------------------------------------");
-//
-//		System.out.println("Full Trace of the table:");
-//		System.out.println(getFullTrace("student"));
-//		System.out.println("----------------------------------------");
-//
-//		System.out.println("Last Trace of the table:");
-//		System.out.println(getLastTrace("student"));
-//		System.out.println("----------------------------------------");
-//
-//		System.out.println("The trace of the Tables Folder:");
-//		System.out.println(FileManager.trace());
-//		FileManager.reset();
-//		System.out.println("----------------------------------------");
-//
-//		System.out.println("The trace of the Tables Folder after resetting:");
-//		System.out.println(FileManager.trace());
-
-//		System.out.println((int) (Math.random() * (2 + 1)));
-//
-//		Random random = new Random(267);
-//		System.out.println((int) (random.nextDouble() * (4 + 1)));
-
 	}
-	
-	
-	
+
 }
