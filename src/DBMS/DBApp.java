@@ -6,6 +6,7 @@ import java.util.*;
 public class DBApp
 {
 	static int dataPageSize = 2;
+	static int indexPageSize = 5;
 	
 	public static void createTable(String tableName, String[] columnsNames)
 	{
@@ -154,31 +155,14 @@ public class DBApp
 
 		return res;
 	}
-	
-	public static String getFullTrace(String tableName)
-	{
-		String res = "";
 
-		Table t = FileManager.loadTable(tableName);
 
-		for(String op : t.getOps()){
-			res += op + "\n";
-		}
-
-		res += "Pages Count: " + (t.getLastPage()+1) + ", Records Count: " + t.getRows();
-
-		return res;
-	}
-	
-	public static String getLastTrace(String tableName)
-	{
-		Table t = FileManager.loadTable(tableName);
-		return t.getOps().getLast();
-	}
-
-	// -----------------MS2-------------------
+	// -----------------MS2----------------------
 
 	public static ArrayList<String []> validateRecords(String tableName){
+
+
+
 		return null;
 	}
 
@@ -198,19 +182,146 @@ public class DBApp
 		return null;
 	}
 
-	// -----------------MS3-------------------
+	// -----------------MS3----------------------
 
-	public static void creatDenseIndex(String tableName, String colName){
+	public static void createDenseIndex(String tableName, String colName){
 
+		long startTime = System.nanoTime();
+
+		Table t = FileManager.loadTable(tableName);
+
+		int colNumber = 0;
+
+		for (int i = 0; i < t.getColumns().length; i++) {
+			if (t.getColumns()[i].equals(colName)) {
+				colNumber = i;
+				break;
+			}
+		}
+
+		ArrayList<pair> pairs = new ArrayList<>();
+
+		for (int i = 0; i <= t.getLastPage(); i++) {
+			Page p = FileManager.loadTablePage(tableName, i);
+
+			for (int j = 0; j < p.getPageSize(); j++) {
+				pointer pointer = new pointer(i , j);
+				pair pair = new pair(p.getRecord(j)[colNumber] , pointer);
+				pairs.add(pair);
+			}
+
+		}
+
+		Collections.sort(pairs , (a,b)->{
+			return a.key.compareTo(b.key);
+		});
+
+
+		int blockNumber = 0;
+		DenseIndexBlock block = new DenseIndexBlock();
+
+        for (DBMS.pair pair : pairs) {
+            if (!block.insert(pair)) {
+                FileManager.storeIndexBlock(tableName, colName, blockNumber, block);
+                blockNumber++;
+                block = new DenseIndexBlock();
+                block.insert(pair);
+            }
+        }
+		FileManager.storeIndexBlock(tableName,colName,blockNumber,block);
+
+		long endTime = System.nanoTime();
+
+		long time = (endTime - startTime) / 1000000;
+
+		String op = "Dense Index created ont Table: \"" + tableName + "\" on column: \"" + colName
+				+ "\", execution time (mil):" + time;
+
+		t.getOps().add(op);
+		FileManager.storeTable(tableName, t);
 	}
 
 	public static String getIndexRepresentation(String tableName, String colName){
-		return null;
+		StringBuilder out = new StringBuilder("[");
+
+		Table t = FileManager.loadTable(tableName);
+
+		int rows = t.getRows();
+
+		int numberOfBlocks = (rows + indexPageSize - 1) / indexPageSize;
+
+		for (int i = 0; i < numberOfBlocks ; i++) {
+			DenseIndexBlock block = FileManager.loadIndexBlock(tableName, colName, i);
+
+			if (block == null)continue;
+
+			out.append(block.toString());
+
+			out.append(i == numberOfBlocks-1 ? "]" : ", ");
+
+		}
+
+		return out.toString();
+	}
+
+	// ------------------------------------------
+
+	public static String getFullTrace(String tableName)
+	{
+		StringBuilder res = new StringBuilder();
+
+		Table t = FileManager.loadTable(tableName);
+
+		for(String op : t.getOps()){
+			res.append(op).append("\n");
+		}
+
+		res.append("Pages Count: ").append(t.getLastPage() + 1).append(", Records Count: ").append(t.getRows());
+
+		return res.toString();
+	}
+
+	public static String getLastTrace(String tableName)
+	{
+		Table t = FileManager.loadTable(tableName);
+		return t.getOps().getLast();
 	}
 
 
 	public static void main(String []args) throws IOException
 	{
+
+		FileManager.reset();
+		String[] cols = {"id","name","major","semester","gpa"};
+		createTable("student", cols);
+		String[] r1 = {"1", "stud1", "CS", "5", "0.9"};
+		insert("student", r1);
+		String[] r2 = {"2", "stud2", "BI", "7", "1.2"};
+		insert("student", r2);
+		String[] r3 = {"3", "stud3", "CS", "2", "2.4"};
+		insert("student", r3);
+		String[] r4 = {"4", "stud4", "DMET", "9", "1.2"};
+		insert("student", r4);
+		String[] r5 = {"5", "stud5", "BI", "4", "3.5"};
+		insert("student", r5);
+
+		System.out.println("--------------------------------");
+		System.out.println("Full Trace of the table:");
+		System.out.println(getFullTrace("student"));
+		System.out.println("--------------------------------");
+		System.out.println("Last Trace of the table:");
+		System.out.println(getLastTrace("student"));
+		System.out.println("--------------------------------");
+		System.out.println("The trace of the Tables Folder:");
+		System.out.println(FileManager.trace());
+
+
+
+
+//		FileManager.reset();
+//		System.out.println("--------------------------------");
+//		System.out.println("The trace of the Tables Folder after resetting:");
+//		System.out.println(FileManager.trace());
 
 	}
 
