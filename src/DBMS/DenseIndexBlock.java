@@ -24,12 +24,7 @@ public class DenseIndexBlock implements Serializable {
 
 
     public String toString(){
-        StringBuilder out = new StringBuilder("[");
-
-        for (int i = 0; i < block.size(); i++) {
-            out.append(block.get(i).toString()).append(i == block.size() - 1 ? "]" : ", ");
-        }
-        return out.toString();
+        return block.toString();
     }
 
 }

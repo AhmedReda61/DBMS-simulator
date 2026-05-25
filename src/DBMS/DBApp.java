@@ -499,7 +499,6 @@ public class DBApp
 	}
 
 	public static String getIndexRepresentation(String tableName, String colName){
-		StringBuilder out = new StringBuilder("[");
 
 		Table t = FileManager.loadTable(tableName);
 
@@ -507,18 +506,18 @@ public class DBApp
 
 		int numberOfBlocks = (rows + indexPageSize - 1) / indexPageSize;
 
+		ArrayList<DenseIndexBlock> blocks = new ArrayList<>();
+
 		for (int i = 0; i < numberOfBlocks ; i++) {
 			DenseIndexBlock block = FileManager.loadIndexBlock(tableName, colName, i);
 
 			if (block == null)continue;
 
-			out.append(block.toString());
-
-			out.append(i == numberOfBlocks-1 ? "]" : ", ");
+			blocks.add(block);
 
 		}
 
-		return out.toString();
+		return blocks.toString();
 	}
 
 	// ------------------------------------------
@@ -580,7 +579,9 @@ public class DBApp
 		System.out.println("The trace of the Tables Folder:");
 		System.out.println(FileManager.trace());
 
+		createDenseIndex("student" , "major");
 
+		System.out.println(getIndexRepresentation("student" , "major"));
 
 		FileManager.reset();
 		System.out.println("--------------------------------");
